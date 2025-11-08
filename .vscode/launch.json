@@ -5,14 +5,14 @@
       "name": "Flutter (Chrome)",
       "request": "launch",
       "type": "dart",
-      "program": "lib/main.dart",
+      "program": "front/lib/main.dart",
       "deviceId": "chrome"
     },
     {
       "name": "Flutter (Edge)",
       "request": "launch",
       "type": "dart",
-      "program": "lib/main.dart",
+      "program": "front/lib/main.dart",
       "deviceId": "edge"
     }
   ]
