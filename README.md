@@ -8,8 +8,7 @@ This is a monorepo containing multiple services.
 xp7kbot/
 ├── front/          # Flutter frontend
 ├── ai/             # AI chat backend (FastAPI + Ollama)
-├── rag/            # RAG server (TON data RAG system) - TODO
-└── railway.json    # Root Railway configuration for monorepo
+└── rag/            # RAG server (TON data RAG system) - TODO
 ```
 
 ## Services

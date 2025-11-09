@@ -9,6 +9,16 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="Telegram Mini App">
   <!-- Viewport is handled by Flutter automatically -->
+  <style>
+    body {
+      background-color: #000000 !important;
+      margin: 0;
+      padding: 0;
+    }
+    html {
+      background-color: #000000 !important;
+    }
+  </style>
   <link rel="stylesheet" href="styles.css">
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script>
@@ -18,7 +28,7 @@
     }
   </script>
 </head>
-<body>
+<body style="background-color: #000000; margin: 0; padding: 0;">
   <script>
     // Fallback if main.dart.js doesn't load
     window.addEventListener('error', function(e) {

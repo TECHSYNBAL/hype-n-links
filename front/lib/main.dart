@@ -17,6 +17,7 @@ class MyApp extends StatelessWidget {
       // Use default theme without Material fonts to avoid loading errors
       theme: ThemeData(
         useMaterial3: false,
+        scaffoldBackgroundColor: Colors.black,
         fontFamily: 'Aeroport',
         textTheme: const TextTheme(
           bodyLarge: TextStyle(
@@ -158,7 +159,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.black,
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 480),
@@ -170,10 +171,17 @@ class _HomePageState extends State<HomePage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                SvgPicture.asset(
-                  'assets/images/logo.svg',
-                  width: 30,
-                  height: 30,
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(15),
+                  decoration: const BoxDecoration(
+                    color: Colors.black,
+                  ),
+                  child: SvgPicture.asset(
+                    'assets/images/logo.svg',
+                    width: 30,
+                    height: 30,
+                  ),
                 ),
                 // Add your second child here
                 if (!_isFocused) ...[
@@ -181,28 +189,32 @@ class _HomePageState extends State<HomePage> {
                     width: 100,
                     height: 50,
                     child: Center(
-                      child: Text('Child 1'),
+                      child: Text('Child 1',
+                          style: TextStyle(color: Colors.white)),
                     ),
                   ),
                   const SizedBox(
                     width: 100,
                     height: 50,
                     child: Center(
-                      child: Text('Child 2'),
+                      child: Text('Child 2',
+                          style: TextStyle(color: Colors.white)),
                     ),
                   ),
                   const SizedBox(
                     width: 100,
                     height: 50,
                     child: Center(
-                      child: Text('Child 3'),
+                      child: Text('Child 3',
+                          style: TextStyle(color: Colors.white)),
                     ),
                   ),
                   const SizedBox(
                     width: 100,
                     height: 50,
                     child: Center(
-                      child: Text('Child 4'),
+                      child: Text('Child 4',
+                          style: TextStyle(color: Colors.white)),
                     ),
                   ),
                 ],
@@ -210,7 +222,7 @@ class _HomePageState extends State<HomePage> {
                   width: double.infinity,
                   padding: const EdgeInsets.all(15),
                   decoration: const BoxDecoration(
-                    color: Colors.white,
+                    color: Colors.black,
                   ),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
@@ -225,7 +237,7 @@ class _HomePageState extends State<HomePage> {
                                     key: _textFieldKey,
                                     controller: _controller,
                                     focusNode: _focusNode,
-                                    cursorColor: Colors.black,
+                                    cursorColor: Colors.white,
                                     cursorHeight: 15,
                                     maxLines: 11,
                                     minLines: 1,
@@ -234,7 +246,8 @@ class _HomePageState extends State<HomePage> {
                                         fontFamily: 'Aeroport',
                                         fontSize: 15,
                                         fontWeight: FontWeight.w500,
-                                        height: 2.0),
+                                        height: 2.0,
+                                        color: Colors.white),
                                     onSubmitted: (value) {
                                       _navigateToNewPage();
                                     },
@@ -244,7 +257,7 @@ class _HomePageState extends State<HomePage> {
                                           ? null
                                           : 'Ask anything',
                                       hintStyle: const TextStyle(
-                                          color: Colors.black,
+                                          color: Colors.white,
                                           fontFamily: 'Aeroport',
                                           fontSize: 15,
                                           fontWeight: FontWeight.w500,
@@ -269,7 +282,7 @@ class _HomePageState extends State<HomePage> {
                                     key: _textFieldKey,
                                     controller: _controller,
                                     focusNode: _focusNode,
-                                    cursorColor: Colors.black,
+                                    cursorColor: Colors.white,
                                     cursorHeight: 15,
                                     maxLines: 11,
                                     minLines: 1,
@@ -281,7 +294,8 @@ class _HomePageState extends State<HomePage> {
                                         fontFamily: 'Aeroport',
                                         fontSize: 15,
                                         fontWeight: FontWeight.w500,
-                                        height: 2),
+                                        height: 2,
+                                        color: Colors.white),
                                     onSubmitted: (value) {
                                       _navigateToNewPage();
                                     },
@@ -291,7 +305,7 @@ class _HomePageState extends State<HomePage> {
                                           ? null
                                           : 'Ask anything',
                                       hintStyle: const TextStyle(
-                                          color: Colors.black,
+                                          color: Colors.white,
                                           fontFamily: 'Aeroport',
                                           fontSize: 15,
                                           fontWeight: FontWeight.w500,
@@ -386,6 +400,7 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
         _isInputFocused = _inputFocusNode.hasFocus;
       });
     });
+
     _inputController.addListener(() {
       // Check if text contains newline (Enter was pressed)
       if (_inputController.text.contains('\n')) {
@@ -636,234 +651,275 @@ class _NewPageState extends State<NewPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 480),
-          child: SizedBox(
-            width: double.infinity,
-            height: double.infinity,
-            //padding: const EdgeInsets.all(15),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: SingleChildScrollView(
-                    controller: _scrollController,
-                    reverse: false,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: _qaPairs.asMap().entries.map((entry) {
-                        final index = entry.key;
-                        final pair = entry.value;
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // Question
-                            Text(
-                              pair.question,
-                              style: const TextStyle(
-                                fontFamily: 'Aeroport',
-                                fontSize: 20,
-                                fontWeight: FontWeight.w700,
-                                color: Colors.black,
-                              ),
-                              textAlign: TextAlign.left,
-                            ),
-                            const SizedBox(height: 16),
-                            // Response (loading, error, or content)
-                            if (pair.isLoading && pair.dotsController != null)
-                              AnimatedBuilder(
-                                animation: pair.dotsController!,
-                                builder: (context, child) {
-                                  final progress = pair.dotsController!.value;
-                                  int dotCount = 1;
-                                  if (progress < 0.33) {
-                                    dotCount = 1;
-                                  } else if (progress < 0.66) {
-                                    dotCount = 2;
-                                  } else {
-                                    dotCount = 3;
-                                  }
-                                  return Text(
-                                    '·' * dotCount,
-                                    style: const TextStyle(
-                                      fontFamily: 'Aeroport',
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.black,
-                                    ),
-                                    textAlign: TextAlign.left,
-                                  );
-                                },
-                              )
-                            else if (pair.error != null)
-                              Text(
-                                pair.error!,
-                                style: const TextStyle(
-                                  fontFamily: 'Aeroport',
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.red,
-                                ),
-                                textAlign: TextAlign.left,
-                              )
-                            else if (pair.response != null)
-                              Text(
-                                pair.response!,
-                                style: const TextStyle(
-                                  fontFamily: 'Aeroport',
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black,
-                                ),
-                                textAlign: TextAlign.left,
-                              )
-                            else
-                              const Text(
-                                'No response received',
-                                style: TextStyle(
-                                  fontFamily: 'Aeroport',
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            // Add spacing between Q&A pairs (except for the last one in reversed list)
-                            if (index < _qaPairs.length - 1)
-                              const SizedBox(height: 32),
-                          ],
-                        );
-                      }).toList(),
+    return Theme(
+      data: Theme.of(context).copyWith(
+        scrollbarTheme: ScrollbarThemeData(
+          thickness: WidgetStateProperty.all(1.0),
+          radius: const Radius.circular(0),
+          thumbVisibility: WidgetStateProperty.all(true),
+          thumbColor: WidgetStateProperty.all(Colors.white),
+          trackColor: WidgetStateProperty.all(Colors.white.withOpacity(0.2)),
+          minThumbLength: 20.0,
+        ),
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.black,
+        body: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 480),
+            child: SizedBox(
+              width: double.infinity,
+              height: double.infinity,
+              //padding: const EdgeInsets.all(15),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(15),
+                    decoration: const BoxDecoration(
+                      color: Colors.black,
+                    ),
+                    child: SvgPicture.asset(
+                      'assets/images/logo.svg',
+                      width: 30,
+                      height: 30,
                     ),
                   ),
-                ),
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(15),
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Expanded(
-                        child: Container(
-                          constraints: const BoxConstraints(minHeight: 30),
-                          child: _inputController.text.isEmpty
-                              ? SizedBox(
-                                  height: 30,
-                                  child: TextField(
-                                    key: _inputTextFieldKey,
-                                    controller: _inputController,
-                                    focusNode: _inputFocusNode,
-                                    cursorColor: Colors.black,
-                                    cursorHeight: 15,
-                                    maxLines: 11,
-                                    minLines: 1,
-                                    textAlignVertical: TextAlignVertical.center,
+                  Expanded(
+                    child: Scrollbar(
+                      controller: _scrollController,
+                      thumbVisibility: true,
+                      thickness: 1.0,
+                      radius: const Radius.circular(0),
+                      child: SingleChildScrollView(
+                        controller: _scrollController,
+                        reverse: false,
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 5.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: _qaPairs.asMap().entries.map((entry) {
+                              final index = entry.key;
+                              final pair = entry.value;
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // Question
+                                  Text(
+                                    pair.question,
                                     style: const TextStyle(
-                                        fontFamily: 'Aeroport',
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w500,
-                                        height: 2.0),
-                                    onSubmitted: (value) {
-                                      _askNewQuestion();
-                                    },
-                                    decoration: InputDecoration(
-                                      hintText: (_isInputFocused ||
-                                              _inputController.text.isNotEmpty)
-                                          ? null
-                                          : 'Ask anything',
-                                      hintStyle: const TextStyle(
-                                          color: Colors.black,
-                                          fontFamily: 'Aeroport',
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w500,
-                                          height: 2.0),
-                                      border: InputBorder.none,
-                                      enabledBorder: InputBorder.none,
-                                      focusedBorder: InputBorder.none,
-                                      isDense: true,
-                                      contentPadding: !_isInputFocused
-                                          ? const EdgeInsets.only(
-                                              left: 0,
-                                              right: 0,
-                                              top: 5,
-                                              bottom: 5)
-                                          : const EdgeInsets.only(right: 0),
+                                      fontFamily: 'Aeroport',
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.white,
                                     ),
+                                    textAlign: TextAlign.left,
                                   ),
-                                )
-                              : Padding(
-                                  padding: const EdgeInsets.only(bottom: 8),
-                                  child: TextField(
-                                    key: _inputTextFieldKey,
-                                    controller: _inputController,
-                                    focusNode: _inputFocusNode,
-                                    cursorColor: Colors.black,
-                                    cursorHeight: 15,
-                                    maxLines: 11,
-                                    minLines: 1,
-                                    textAlignVertical: _inputController.text
-                                                .split('\n')
-                                                .length ==
-                                            1
-                                        ? TextAlignVertical.center
-                                        : TextAlignVertical.bottom,
-                                    style: const TextStyle(
+                                  const SizedBox(height: 16),
+                                  // Response (loading, error, or content)
+                                  if (pair.isLoading &&
+                                      pair.dotsController != null)
+                                    AnimatedBuilder(
+                                      animation: pair.dotsController!,
+                                      builder: (context, child) {
+                                        final progress =
+                                            pair.dotsController!.value;
+                                        int dotCount = 1;
+                                        if (progress < 0.33) {
+                                          dotCount = 1;
+                                        } else if (progress < 0.66) {
+                                          dotCount = 2;
+                                        } else {
+                                          dotCount = 3;
+                                        }
+                                        return Text(
+                                          '·' * dotCount,
+                                          style: const TextStyle(
+                                            fontFamily: 'Aeroport',
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.white,
+                                          ),
+                                          textAlign: TextAlign.left,
+                                        );
+                                      },
+                                    )
+                                  else if (pair.error != null)
+                                    Text(
+                                      pair.error!,
+                                      style: const TextStyle(
                                         fontFamily: 'Aeroport',
                                         fontSize: 15,
                                         fontWeight: FontWeight.w500,
-                                        height: 2),
-                                    onSubmitted: (value) {
-                                      _askNewQuestion();
-                                    },
-                                    decoration: InputDecoration(
-                                      hintText: (_isInputFocused ||
-                                              _inputController.text.isNotEmpty)
-                                          ? null
-                                          : 'Ask anything',
-                                      hintStyle: const TextStyle(
-                                          color: Colors.black,
+                                        color: Colors.red,
+                                      ),
+                                      textAlign: TextAlign.left,
+                                    )
+                                  else if (pair.response != null)
+                                    Text(
+                                      pair.response!,
+                                      style: const TextStyle(
+                                        fontFamily: 'Aeroport',
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.white,
+                                      ),
+                                      textAlign: TextAlign.left,
+                                    )
+                                  else
+                                    const Text(
+                                      'No response received',
+                                      style: TextStyle(
+                                        fontFamily: 'Aeroport',
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  // Add spacing between Q&A pairs (except for the last one in reversed list)
+                                  if (index < _qaPairs.length - 1)
+                                    const SizedBox(height: 32),
+                                ],
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(15),
+                    decoration: const BoxDecoration(
+                      color: Colors.black,
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Expanded(
+                          child: Container(
+                            constraints: const BoxConstraints(minHeight: 30),
+                            child: _inputController.text.isEmpty
+                                ? SizedBox(
+                                    height: 30,
+                                    child: TextField(
+                                      key: _inputTextFieldKey,
+                                      controller: _inputController,
+                                      focusNode: _inputFocusNode,
+                                      cursorColor: Colors.white,
+                                      cursorHeight: 15,
+                                      maxLines: 11,
+                                      minLines: 1,
+                                      textAlignVertical:
+                                          TextAlignVertical.center,
+                                      style: const TextStyle(
                                           fontFamily: 'Aeroport',
                                           fontSize: 15,
                                           fontWeight: FontWeight.w500,
-                                          height: 2),
-                                      border: InputBorder.none,
-                                      enabledBorder: InputBorder.none,
-                                      focusedBorder: InputBorder.none,
-                                      isDense: true,
-                                      contentPadding: _inputController.text
+                                          height: 2.0,
+                                          color: Colors.white),
+                                      onSubmitted: (value) {
+                                        _askNewQuestion();
+                                      },
+                                      decoration: InputDecoration(
+                                        hintText: (_isInputFocused ||
+                                                _inputController
+                                                    .text.isNotEmpty)
+                                            ? null
+                                            : 'Ask anything',
+                                        hintStyle: const TextStyle(
+                                            color: Colors.white,
+                                            fontFamily: 'Aeroport',
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w500,
+                                            height: 2.0),
+                                        border: InputBorder.none,
+                                        enabledBorder: InputBorder.none,
+                                        focusedBorder: InputBorder.none,
+                                        isDense: true,
+                                        contentPadding: !_isInputFocused
+                                            ? const EdgeInsets.only(
+                                                left: 0,
+                                                right: 0,
+                                                top: 5,
+                                                bottom: 5)
+                                            : const EdgeInsets.only(right: 0),
+                                      ),
+                                    ),
+                                  )
+                                : Padding(
+                                    padding: const EdgeInsets.only(bottom: 8),
+                                    child: TextField(
+                                      key: _inputTextFieldKey,
+                                      controller: _inputController,
+                                      focusNode: _inputFocusNode,
+                                      cursorColor: Colors.white,
+                                      cursorHeight: 15,
+                                      maxLines: 11,
+                                      minLines: 1,
+                                      textAlignVertical: _inputController.text
                                                   .split('\n')
-                                                  .length >
+                                                  .length ==
                                               1
-                                          ? const EdgeInsets.only(
-                                              left: 0, right: 0, top: 11)
-                                          : const EdgeInsets.only(right: 0),
+                                          ? TextAlignVertical.center
+                                          : TextAlignVertical.bottom,
+                                      style: const TextStyle(
+                                          fontFamily: 'Aeroport',
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w500,
+                                          height: 2,
+                                          color: Colors.white),
+                                      onSubmitted: (value) {
+                                        _askNewQuestion();
+                                      },
+                                      decoration: InputDecoration(
+                                        hintText: (_isInputFocused ||
+                                                _inputController
+                                                    .text.isNotEmpty)
+                                            ? null
+                                            : 'Ask anything',
+                                        hintStyle: const TextStyle(
+                                            color: Colors.white,
+                                            fontFamily: 'Aeroport',
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w500,
+                                            height: 2),
+                                        border: InputBorder.none,
+                                        enabledBorder: InputBorder.none,
+                                        focusedBorder: InputBorder.none,
+                                        isDense: true,
+                                        contentPadding: _inputController.text
+                                                    .split('\n')
+                                                    .length >
+                                                1
+                                            ? const EdgeInsets.only(
+                                                left: 0, right: 0, top: 11)
+                                            : const EdgeInsets.only(right: 0),
+                                      ),
                                     ),
                                   ),
-                                ),
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 5),
-                      GestureDetector(
-                        onTap: () {
-                          _askNewQuestion();
-                        },
-                        child: SvgPicture.asset(
-                          'assets/icons/apply.svg',
-                          width: 30,
-                          height: 30,
+                        const SizedBox(width: 5),
+                        GestureDetector(
+                          onTap: () {
+                            _askNewQuestion();
+                          },
+                          child: SvgPicture.asset(
+                            'assets/icons/apply.svg',
+                            width: 30,
+                            height: 30,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
