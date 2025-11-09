@@ -53,79 +53,174 @@
   </style>
   <link rel="stylesheet" href="styles.css">
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <script src="https://unpkg.com/@telegram-apps/sdk@1.0.0/dist/index.iife.js"></script>
+  <script src="https://unpkg.com/@tma.js/sdk@2.5.0/dist/index.iife.js"></script>
   <script>
     (function() {
-      // Initialize Telegram WebApp
-      if (window.Telegram && window.Telegram.WebApp) {
-        window.Telegram.WebApp.ready();
-        window.Telegram.WebApp.expand();
+      // Function to disable swipe-to-close
+      function disableSwipeToClose() {
+        // Method 1: Use Telegram WebApp API (available since v7.7)
+        if (window.Telegram && window.Telegram.WebApp) {
+          var webApp = window.Telegram.WebApp;
+          
+          // Call setupSwipeBehavior to disable vertical swipe
+          if (typeof webApp.setupSwipeBehavior === 'function') {
+            try {
+              webApp.setupSwipeBehavior({
+                allow_vertical_swipe: false
+              });
+              console.log('Swipe-to-close disabled via setupSwipeBehavior');
+            } catch (e) {
+              console.warn('Error calling setupSwipeBehavior:', e);
+            }
+          }
+          
+          // Fallback: Use postEvent
+          if (webApp.postEvent) {
+            try {
+              webApp.postEvent('web_app_setup_swipe_behavior', {
+                allow_vertical_swipe: false
+              });
+              console.log('Swipe-to-close disabled via postEvent');
+            } catch (e) {
+              console.warn('Error calling postEvent for swipe behavior:', e);
+            }
+          }
+        }
+        
+        // Method 2: Use TMA.js SDK
+        try {
+          if (window.tmajs && window.tmajs.sdk) {
+            var { postEvent } = window.tmajs.sdk;
+            postEvent('web_app_setup_swipe_behavior', {
+              allow_vertical_swipe: false
+            });
+            console.log('Swipe-to-close disabled via TMA.js SDK');
+          }
+        } catch (e) {
+          console.warn('Error using TMA.js SDK:', e);
+        }
       }
       
-      // Make app sticky to prevent swipe-down closure
-      function applyStickyStyles() {
-        try {
-          var { retrieveLaunchParams, postEvent } = window.telegramApps.sdk;
-          var lp = retrieveLaunchParams();
+      // Initialize Telegram WebApp
+      if (window.Telegram && window.Telegram.WebApp) {
+        var webApp = window.Telegram.WebApp;
+        webApp.ready();
+        webApp.expand();
+        
+        // Disable swipe-to-close immediately
+        disableSwipeToClose();
+        
+        // Also disable after a short delay to ensure WebApp is fully initialized
+        setTimeout(function() {
+          disableSwipeToClose();
+        }, 100);
+        
+        setTimeout(function() {
+          disableSwipeToClose();
+        }, 500);
+        
+        // Also disable on viewport change (in case of fullscreen toggle)
+        if (webApp.onEvent) {
+          webApp.onEvent('viewportChanged', function() {
+            setTimeout(disableSwipeToClose, 100);
+          });
+        }
+      }
+      
+      // Also try to disable when TMA.js SDK is ready
+      if (window.tmajs && window.tmajs.sdk) {
+        setTimeout(function() {
+          disableSwipeToClose();
+        }, 200);
+      }
+      
+      // Apply CSS sticky styles as additional protection
+      try {
+        var { retrieveLaunchParams, postEvent } = window.tmajs.sdk;
+        var lp = retrieveLaunchParams();
 
-          // Some versions of Telegram don't need the sticky classes
-          if (['macos', 'tdesktop', 'weba', 'web', 'webk'].includes(lp.platform)) {
-            return;
-          }
-
+        // Some versions of Telegram don't need the sticky classes
+        if (!['macos', 'tdesktop', 'weba', 'web', 'webk'].includes(lp.platform)) {
           // Expand the application
           postEvent('web_app_expand');
 
-          // Apply sticky classes
+          // Apply sticky classes to body
           document.body.classList.add('mobile-body');
           
-          // Find Flutter's root element and apply classes
-          // Wait for Flutter to initialize
-          function findFlutterRoot() {
-            var flutterRoot = document.querySelector('flt-glass-pane') || 
-                             document.querySelector('flt-scene-host') ||
-                             document.querySelector('flt-scene') ||
-                             document.body;
+          // Find Flutter's root elements and apply classes
+          function applyFlutterStickyClasses() {
+            var flutterWrap = document.querySelector('flt-glass-pane') || 
+                            document.querySelector('flt-scene-host') ||
+                            document.querySelector('flt-scene');
             
-            if (flutterRoot && flutterRoot !== document.body) {
-              flutterRoot.classList.add('mobile-wrap');
-              
-              // Find content container
-              var content = flutterRoot.querySelector('flt-scene') ||
-                           flutterRoot.querySelector('flt-scene-host') ||
-                           flutterRoot;
-              
-              if (content) {
-                content.classList.add('mobile-content');
-              }
-              return true;
+            var flutterContent = document.querySelector('flt-scene') ||
+                                document.querySelector('flt-scene-host') ||
+                                document.querySelector('flt-scene-host > flt-scene');
+            
+            if (flutterWrap) {
+              flutterWrap.classList.add('mobile-wrap');
             }
-            return false;
+            
+            if (flutterContent) {
+              flutterContent.classList.add('mobile-content');
+            }
+            
+            return flutterWrap && flutterContent;
           }
           
-          // Try to find Flutter root immediately
-          if (!findFlutterRoot()) {
-            // If not found, wait for Flutter to load
+          // Try to apply classes immediately
+          if (!applyFlutterStickyClasses()) {
             var attempts = 0;
-            var maxAttempts = 50; // 5 seconds max
+            var maxAttempts = 100;
             var interval = setInterval(function() {
               attempts++;
-              if (findFlutterRoot() || attempts >= maxAttempts) {
+              if (applyFlutterStickyClasses() || attempts >= maxAttempts) {
                 clearInterval(interval);
               }
             }, 100);
           }
-        } catch (e) {
-          console.warn('Could not apply sticky app styles:', e);
         }
+      } catch (e) {
+        console.warn('Could not apply sticky app styles:', e);
       }
       
-      // Apply sticky styles when DOM is ready
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', applyStickyStyles);
-      } else {
-        applyStickyStyles();
-      }
+      // Prevent touchmove default to block swipe-down close gesture
+      // Only prevent when swiping from the very top edge
+      var touchStartY = 0;
+      var touchStartTime = 0;
+      
+      document.addEventListener('touchstart', function(e) {
+        touchStartY = e.touches[0].clientY;
+        touchStartTime = Date.now();
+      }, { passive: true });
+      
+      document.addEventListener('touchmove', function(e) {
+        // Only prevent if swiping down from the very top edge (first 20px)
+        if (touchStartY < 20) {
+          var touchY = e.touches[0].clientY;
+          var deltaY = touchY - touchStartY;
+          
+          // If swiping down from top edge, prevent default to block close gesture
+          if (deltaY > 5) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+          }
+        }
+      }, { passive: false });
+      
+      // Also prevent on body and html
+      document.body.addEventListener('touchmove', function(e) {
+        if (touchStartY < 20) {
+          var touchY = e.touches[0].clientY;
+          var deltaY = touchY - touchStartY;
+          if (deltaY > 5) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+          }
+        }
+      }, { passive: false });
     })();
   </script>
 </head>
