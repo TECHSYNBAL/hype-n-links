@@ -219,6 +219,31 @@ class _HomePageState extends State<HomePage> {
                     height: 30,
                   ),
                 ),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(20),
+                  decoration: const BoxDecoration(
+                    color: Colors.black,
+                  ),
+                  child: const Column(children: [
+                    Row(
+                      children: [
+                        Text('Sell',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                            )),
+                        Row(
+                          children: [],
+                        )
+                      ],
+                    ),
+                    SizedBox(height: 15),
+                    Row(),
+                    SizedBox(height: 15),
+                    Row()
+                  ]),
+                ),
                 // Add your second child here
                 if (!_isFocused)
                   Padding(
