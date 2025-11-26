@@ -1,4 +1,8 @@
-fix styles
+loading and updating issues
+round to 4 digits
+charts errors
+flashing on apply
+local envs
 add wallet screen
 inputs
 token page

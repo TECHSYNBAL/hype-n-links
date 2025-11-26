@@ -1509,13 +1509,13 @@ class _HomePageState extends State<HomePage> {
                                 children: [
                                   Text(r'$1',
                                       style: TextStyle(
-                                        fontWeight: FontWeight.w500,
+                                        fontWeight: FontWeight.w400,
                                         fontSize: 15,
                                         color: Color(0xFF818181),
                                       )),
                                   Text('TON',
                                       style: TextStyle(
-                                        fontWeight: FontWeight.w500,
+                                        fontWeight: FontWeight.w400,
                                         fontSize: 15,
                                         color: Color(0xFF818181),
                                       )),
@@ -1642,13 +1642,13 @@ class _HomePageState extends State<HomePage> {
                                 children: [
                                   Text(r'$1',
                                       style: TextStyle(
-                                        fontWeight: FontWeight.w500,
+                                        fontWeight: FontWeight.w400,
                                         fontSize: 15,
                                         color: Color(0xFF818181),
                                       )),
                                   Text('TON',
                                       style: TextStyle(
-                                        fontWeight: FontWeight.w500,
+                                        fontWeight: FontWeight.w400,
                                         fontSize: 15,
                                         color: Color(0xFF818181),
                                       )),
@@ -1670,7 +1670,7 @@ class _HomePageState extends State<HomePage> {
                             children: [
                               Center(
                                 child: Text(
-                                  'Swap',
+                                  'Add wallet',
                                   style: TextStyle(
                                     fontWeight: FontWeight.w700,
                                     color: Color.fromARGB(255, 0, 0, 0),
